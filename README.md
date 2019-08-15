@@ -10,6 +10,6 @@
     }
     
     dependencies {
-        implementation 'com.github.qbaowei:log:Tag'
+        implementation 'com.github.qbaowei:log:v1.0'
     }
     	
