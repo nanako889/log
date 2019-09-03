@@ -117,23 +117,23 @@ public class L {
         l('e', jsonLog(message));
     }
 
-    public void urlV(String url, Map<String, String> mapParam) {
+    public void urlV(String url, Map<String, Object> mapParam) {
         l('v', urlLog(url, mapParam));
     }
 
-    public void urlD(String url, Map<String, String> mapParam) {
+    public void urlD(String url, Map<String, Object> mapParam) {
         l('d', urlLog(url, mapParam));
     }
 
-    public void urlI(String url, Map<String, String> mapParam) {
+    public void urlI(String url, Map<String, Object> mapParam) {
         l('i', urlLog(url, mapParam));
     }
 
-    public void urlW(String url, Map<String, String> mapParam) {
+    public void urlW(String url, Map<String, Object> mapParam) {
         l('w', urlLog(url, mapParam));
     }
 
-    public void urlE(String url, Map<String, String> mapParam) {
+    public void urlE(String url, Map<String, Object> mapParam) {
         l('e', urlLog(url, mapParam));
     }
 
@@ -255,11 +255,14 @@ public class L {
         return "";
     }
 
-    public String urlLog(String url, Map<String, String> mapParam) {
+    public String urlLog(String url, Map<String, Object> mapParam) {
+        if(!mEnabled) {
+            return "";
+        }
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(url + "?");
         if (null != mapParam && !mapParam.isEmpty()) {
-            Set<Map.Entry<String, String>> entrySet = mapParam.entrySet();
+            Set<Map.Entry<String, Object>> entrySet = mapParam.entrySet();
             for (Map.Entry entry : entrySet) {
                 stringBuilder.append(entry.getKey() + "=" + entry.getValue() + "&");
             }
