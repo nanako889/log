@@ -24,7 +24,7 @@ import java.util.Set;
 
 public class L {
 
-    private static String sCommonFilterTag = "[xlog]";
+    private static String sCommonFilterTag = "[log]";
     public static final L GL = new L();
 
     private boolean mEnabled = false;
@@ -98,66 +98,88 @@ public class L {
     }
 
     public void jsonV(String message) {
-        l('v', jsonLog(message));
+        if (mEnabled) log('v', createLog(jsonLog(message), 5));
     }
 
     public void jsonD(String message) {
-        l('d', jsonLog(message));
+        if (mEnabled) log('d', createLog(jsonLog(message), 5));
     }
 
     public void jsonI(String message) {
-        l('i', jsonLog(message));
+        if (mEnabled) log('i', createLog(jsonLog(message), 5));
     }
 
     public void jsonW(String message) {
-        l('w', jsonLog(message));
+        if (mEnabled) log('w', createLog(jsonLog(message), 5));
     }
 
     public void jsonE(String message) {
-        l('e', jsonLog(message));
+        if (mEnabled) log('e', createLog(jsonLog(message), 5));
     }
 
     public void urlV(String url, Map<String, Object> mapParam) {
-        l('v', urlLog(url, mapParam));
+        if (mEnabled) l('v', urlLog(url, mapParam));
     }
 
     public void urlD(String url, Map<String, Object> mapParam) {
-        l('d', urlLog(url, mapParam));
+        if (mEnabled) l('d', urlLog(url, mapParam));
     }
 
     public void urlI(String url, Map<String, Object> mapParam) {
-        l('i', urlLog(url, mapParam));
+        if (mEnabled) l('i', urlLog(url, mapParam));
     }
 
     public void urlW(String url, Map<String, Object> mapParam) {
-        l('w', urlLog(url, mapParam));
+        if (mEnabled) l('w', urlLog(url, mapParam));
     }
 
     public void urlE(String url, Map<String, Object> mapParam) {
-        l('e', urlLog(url, mapParam));
+        if (mEnabled) l('e', urlLog(url, mapParam));
     }
 
     private void l(char type, String logFormat, Object... logParam) {
+        if (!mEnabled) {
+            return;
+        }
         try {
             boolean isWriteToFile = !TextUtils.isEmpty(mLogDirPath);
-            if (mEnabled || isWriteToFile) {
-                String log = String.format(logFormat, logParam);
-                String[] logs = createLog(log);
-                if (mEnabled) {
-                    log(type, logs[0], logs[1]);
-                }
-                if (isWriteToFile) {
-                    writeToFile(logs[0], logs[1]);
-                }
+            String[] logs = createLog(String.format(logFormat, logParam));
+            log(type, logs);
+            if (isWriteToFile) {
+                writeToFile(logs[0], logs[1]);
             }
         } catch (Exception e) {
             if (e != null) {
                 String msg = e.getMessage();
                 if (!TextUtils.isEmpty(msg)) {
-                    Log.w("xlog", msg);
+                    Log.w("[L]156", msg);
                 }
             }
         }
+    }
+
+    public void logV(String log) {
+        if (mEnabled) log('v', createLog(log, 5));
+    }
+
+    public void logD(String log) {
+        if (mEnabled) log('d', createLog(log, 5));
+    }
+
+    public void logI(String log) {
+        if (mEnabled) log('i', createLog(log, 5));
+    }
+
+    public void logW(String log) {
+        if (mEnabled) log('w', createLog(log, 5));
+    }
+
+    public void logE(String log) {
+        if (mEnabled) log('e', createLog(log, 5));
+    }
+
+    private void log(char level, String[] logs) {
+        log(level, logs[0], logs[1]);
     }
 
     /**
@@ -256,7 +278,7 @@ public class L {
     }
 
     public String urlLog(String url, Map<String, Object> mapParam) {
-        if(!mEnabled) {
+        if (!mEnabled) {
             return "";
         }
         StringBuilder stringBuilder = new StringBuilder();
@@ -282,12 +304,15 @@ public class L {
         }
     }
 
-
     private String[] createLog(String log) {
+        return createLog(log, 7);
+    }
+
+    private String[] createLog(String log, int depth) {
         if (null == log) {
             log = "";
         }
-        String tag = mEnabled ? getFileNameMethodLineNumber(6) : "";
+        String tag = mEnabled ? getFileNameMethodLineNumber(depth) : "";
         if (null == tag) {
             tag = "";
         }

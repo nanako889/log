@@ -1,15 +1,8 @@
 # log
+    A single log util
 
 # download
-
-    allprojects {
-        repositories {
-            ...
-            maven { url 'https://jitpack.io' }
-        }
-    }
-    
     dependencies {
-        implementation 'com.github.qbaowei:log:v1.0'
+        implementation 'top.qinbaowei:log:1.0'
     }
     	
